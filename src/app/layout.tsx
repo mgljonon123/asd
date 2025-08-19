@@ -3,13 +3,13 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
   variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "Securox - Secure Your Place From Top To Bottom",
-  description: "Reduce risk, ship products faster, and resolve issues proactively, by upgrading your infrastructure with securex.",
+  title: "Securox - Орчноо дээдээс доош хүртэл хамгаал",
+  description: "Эрсдэлийг бууруулж, бүтээгдэхүүнээ хурдан хүргэж, асуудлыг урьдчилан шийдэхийн тулд securex-ээр дэд бүтцээ сайжруулаарай.",
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="mn">
       <body className={`${inter.variable} antialiased`}>
         {children}
       </body>

@@ -62,35 +62,35 @@ export default function Home() {
                   href="#"
                   className="relative text-teal-600 font-semibold group"
                 >
-                  Home
+                  Нүүр
                   <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-teal-500 to-blue-600 transform scale-x-100"></span>
                 </a>
                 <a
                   href="#"
                   className="text-gray-700 hover:text-teal-600 font-medium transition-all duration-300 group"
                 >
-                  About Us
+                  Бидний тухай
                   <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-gradient-to-r from-teal-500 to-blue-600"></span>
                 </a>
                 <a
                   href="#"
                   className="text-gray-700 hover:text-teal-600 font-medium transition-all duration-300 group"
                 >
-                  Shop
+                  Дэлгүүр
                   <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-gradient-to-r from-teal-500 to-blue-600"></span>
                 </a>
                 <a
                   href="#"
                   className="text-gray-700 hover:text-teal-600 font-medium transition-all duration-300 group"
                 >
-                  Service
+                  Үйлчилгээ
                   <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-gradient-to-r from-teal-500 to-blue-600"></span>
                 </a>
                 <a
                   href="/admin"
                   className="text-gray-700 hover:text-teal-600 font-medium transition-all duration-300 group"
                 >
-                  Admin
+                  Админ
                   <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-gradient-to-r from-teal-500 to-blue-600"></span>
                 </a>
               </nav>
@@ -156,7 +156,7 @@ export default function Home() {
                     d="M15 19l-7-7 7-7"
                   />
                 </svg>
-                <span>Back to Home</span>
+                <span>Нүүр хуудас руу буцах</span>
               </button>
             </div>
 
@@ -164,17 +164,16 @@ export default function Home() {
             <div className="text-center mb-16">
               <h1 className="text-5xl lg:text-6xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                  Our Security
+                  Манай хамгаалалтын
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent">
-                  Solutions
+                   шийдлүүд
                 </span>
               </h1>
               <p className="text-gray-600 text-xl max-w-3xl mx-auto">
-                Discover our comprehensive range of security cameras, alarm
-                systems, and monitoring solutions designed to protect your
-                property and loved ones.
+                Хамгаалалтын камер, дохиолол болон мониторингийн иж бүрэн
+                шийдлүүдээс сонгон таны өмч, хайртай хүмүүсийг хамгаалаарай.
               </p>
             </div>
 
@@ -198,18 +197,18 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Security Cameras
+                   Хяналтын камер
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  High-quality surveillance cameras with advanced features like
-                  night vision, motion detection, and remote monitoring.
+                   Өндөр чанартай камерууд: шөнийн хараа, хөдөлгөөн илрүүлэлт,
+                   алсаас хяналт зэрэг дэвшилтэт боломжуудтай.
                 </p>
                 <div className="flex items-center justify-between">
                   <span className="text-teal-600 font-semibold">
-                    Starting from ₮280,000
+                     Эхлэх үнэ ₮280,000
                   </span>
                   <button className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors">
-                    View All
+                     Бүгдийг харах
                   </button>
                 </div>
               </div>
@@ -232,18 +231,18 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Alarm Systems
+                   Дохиоллын систем
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Intelligent alarm systems with mobile app control, real-time
-                  alerts, and professional monitoring services.
+                   Ухаалаг дохиоллын систем: гар утасны апп удирдлага, бодит
+                   цагийн мэдэгдэл, мэргэжлийн хяналтын үйлчилгээнүүд.
                 </p>
                 <div className="flex items-center justify-between">
                   <span className="text-purple-600 font-semibold">
-                    Starting from ₮450,000
+                     Эхлэх үнэ ₮450,000
                   </span>
                   <button className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors">
-                    View All
+                     Бүгдийг харах
                   </button>
                 </div>
               </div>
@@ -266,18 +265,18 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Monitoring Services
+                   Мониторингийн үйлчилгээ
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  24/7 professional monitoring with instant response, emergency
-                  dispatch, and comprehensive reporting.
+                   24/7 мэргэжлийн хяналт: түргэн хариу арга хэмжээ, яаралтай
+                   дуудлага, дэлгэрэнгүй тайлан.
                 </p>
                 <div className="flex items-center justify-between">
                   <span className="text-green-600 font-semibold">
-                    Starting from ₮150,000/month
+                     Сард ₮150,000-с
                   </span>
                   <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
-                    Learn More
+                     Дэлгэрэнгүй
                   </button>
                 </div>
               </div>
@@ -286,18 +285,18 @@ export default function Home() {
             {/* Contact Section */}
             <div className="bg-gradient-to-r from-teal-50 to-blue-50 rounded-3xl p-12 text-center">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Ready to Get Started?
+                 Эхлэхэд бэлэн үү?
               </h2>
               <p className="text-gray-600 text-xl mb-8 max-w-2xl mx-auto">
-                Our security experts are here to help you choose the perfect
-                solution for your needs. Get a free consultation today.
+                 Манай мэргэжилтнүүд танд хамгийн тохиромжтой шийдлийг
+                 санал болгоход тусална. Өнөөдөр үнэгүй зөвлөгөө аваарай.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button className="px-8 py-4 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold rounded-xl text-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                  Get Free Quote
+                   Үнэгүй санал авах
                 </button>
                 <button className="px-8 py-4 border-2 border-teal-500 text-teal-600 font-semibold rounded-xl text-lg hover:bg-teal-50 transition-all duration-300">
-                  Schedule Consultation
+                   Зөвлөгөө товлох
                 </button>
               </div>
             </div>
@@ -315,24 +314,24 @@ export default function Home() {
               <div className="mb-8">
                 <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
                   <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-                    SECURE YOUR
+                    ОРЧНОО
                   </span>
                   <br />
                   <span className="bg-gradient-to-r from-teal-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    PLACE FROM
+                    ДЭЭДСЭЭС
                   </span>
                   <br />
                   <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-                    TOP TO BOTTOM
+                     ДООШ ХҮРТЭЛ ХАМГААЛ
                   </span>
                 </h1>
               </div>
 
               {/* Enhanced Subtext */}
               <p className="text-gray-600 text-xl mb-10 leading-relaxed max-w-lg">
-                Reduce risk, ship products faster, and resolve issues
-                proactively, by upgrading your infrastructure with
-                <span className="font-semibold text-teal-600"> securex</span>.
+                Эрсдэлийг бууруулж, бүтээгдэхүүнээ хурдан хүргэж, асуудлыг
+                урьдчилан шийдэхийн тулд дэд бүтцээ
+                <span className="font-semibold text-teal-600"> securex</span>-ээр сайжруулаарай.
               </p>
 
               {/* Enhanced CTA Button */}
@@ -341,11 +340,11 @@ export default function Home() {
                   onClick={handleShopNow}
                   className="group relative px-8 py-4 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold rounded-xl text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-teal-500/25 btn-glow glow-animation"
                 >
-                  <span className="relative z-10">Shop Now</span>
+                  <span className="relative z-10">Дэлгүүр үзэх</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-teal-600 to-blue-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
                 <button className="px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl text-lg hover:border-teal-500 hover:text-teal-600 transition-all duration-300 transform hover:scale-105 hover-lift">
-                  Learn More
+                  Дэлгэрэнгүй
                 </button>
               </div>
 
@@ -355,19 +354,19 @@ export default function Home() {
                   <div className="text-3xl font-bold text-teal-600 mb-2 text-gradient-animate">
                     99.9%
                   </div>
-                  <div className="text-gray-600 text-sm">Uptime</div>
+                  <div className="text-gray-600 text-sm">Ажиллах чадвар</div>
                 </div>
                 <div className="text-center hover-lift p-4 rounded-xl">
                   <div className="text-3xl font-bold text-blue-600 mb-2 text-gradient-animate">
                     24/7
                   </div>
-                  <div className="text-gray-600 text-sm">Monitoring</div>
+                  <div className="text-gray-600 text-sm">Хяналт</div>
                 </div>
                 <div className="text-center hover-lift p-4 rounded-xl">
                   <div className="text-3xl font-bold text-purple-600 mb-2 text-gradient-animate">
                     10K+
                   </div>
-                  <div className="text-gray-600 text-sm">Customers</div>
+                  <div className="text-gray-600 text-sm">Харилцагчид</div>
                 </div>
               </div>
             </div>
@@ -458,7 +457,7 @@ export default function Home() {
             {/* Enhanced Social Media Links */}
             <div className="absolute right-8 top-1/2 transform -translate-y-1/2 text-white">
               <div className="writing-mode-vertical text-sm font-medium mb-8 text-gray-300">
-                Follow Us On
+                 Биднийг дагаарай
               </div>
               <div className="flex flex-col space-y-6">
                 <button className="group w-12 h-12 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-white/20">
@@ -502,16 +501,16 @@ export default function Home() {
             <div className="text-center mb-16">
               <h2 className="text-4xl lg:text-5xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                  Our Premium
+                  Манай дээд зэрэглэлийн
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent">
-                  Security Cameras
+                   хяналтын камерууд
                 </span>
               </h2>
               <p className="text-gray-600 text-xl max-w-2xl mx-auto">
-                Choose from our wide range of high-quality security cameras
-                designed for every environment
+                Ямар ч орчинд тохирсон өндөр чанартай хяналтын камеруудын
+                өргөн сонголтоос сонгоорой
               </p>
             </div>
 
@@ -553,7 +552,7 @@ export default function Home() {
                   </div>
                   {/* Badge */}
                   <div className="absolute top-4 left-4 bg-gradient-to-r from-teal-500 to-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Best Seller
+                     Хамгийн их борлуулалттай
                   </div>
                 </div>
                 <div className="p-6">
@@ -561,7 +560,7 @@ export default function Home() {
                     HD Dome Camera Pro
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    1080p HD resolution with night vision and motion detection
+                    1080p HD нягтаршил, шөнийн хараа, хөдөлгөөн илрүүлэлттэй
                   </p>
 
                   {/* Features */}
@@ -625,7 +624,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-pink-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    New
+                    Шинэ
                   </div>
                 </div>
                 <div className="p-6">
@@ -633,7 +632,7 @@ export default function Home() {
                     4K Bullet Camera Ultra
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    4K ultra HD with 360° pan and tilt capabilities
+                    4K Ultra HD, 360° эргэлт, налалтын боломжтой
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-4">
@@ -641,10 +640,10 @@ export default function Home() {
                       4K Ultra HD
                     </span>
                     <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                      360° View
+                      360° харах өнцөг
                     </span>
                     <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Weatherproof
+                      Цаг агаарын хамгаалалт
                     </span>
                   </div>
 
@@ -669,7 +668,7 @@ export default function Home() {
                       }}
                       className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                     >
-                      Contact Sales
+                      Борлуулалттай холбогдох
                     </button>
                   </div>
                 </div>
@@ -709,7 +708,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute top-4 left-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Premium
+                    Дээд зэрэглэл
                   </div>
                 </div>
                 <div className="p-6">
@@ -717,18 +716,18 @@ export default function Home() {
                     PTZ Security Camera
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Professional PTZ with AI-powered tracking and analytics
+                    AI-тэй мөрдөх ба аналитиктой мэргэжлийн PTZ камер
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
-                      AI Tracking
+                      AI мөрдөх
                     </span>
                     <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-xs font-medium">
-                      PTZ Control
+                      PTZ удирдлага
                     </span>
                     <span className="bg-pink-100 text-pink-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Analytics
+                      Аналитик
                     </span>
                   </div>
 
@@ -753,7 +752,7 @@ export default function Home() {
                       }}
                       className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                     >
-                      Contact Sales
+                      Борлуулалттай холбогдох
                     </button>
                   </div>
                 </div>
@@ -793,7 +792,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Wireless
+                    Утасгүй
                   </div>
                 </div>
                 <div className="p-6">
@@ -801,7 +800,7 @@ export default function Home() {
                     WiFi Security Camera
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Wireless HD camera with mobile app control and cloud storage
+                    Утасгүй HD камер: гар утасны апп удирдлага, үүлэн сан
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-4">
@@ -809,10 +808,10 @@ export default function Home() {
                       WiFi
                     </span>
                     <span className="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Mobile App
+                      Гар утасны апп
                     </span>
                     <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Cloud Storage
+                      Үүлэн сан
                     </span>
                   </div>
 
@@ -837,7 +836,7 @@ export default function Home() {
                       }}
                       className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                     >
-                      Contact Sales
+                      Борлуулалттай холбогдох
                     </button>
                   </div>
                 </div>
@@ -877,7 +876,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Smart
+                    Ухаалаг
                   </div>
                 </div>
                 <div className="p-6">
@@ -885,18 +884,18 @@ export default function Home() {
                     Smart Doorbell Camera
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Video doorbell with two-way audio and motion alerts
+                    Хоёр талын дуу, хөдөлгөөний мэдэгдэлтэй видео хонх
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Two-way Audio
+                      Хоёр талын дуу
                     </span>
                     <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Motion Alerts
+                      Хөдөлгөөний мэдэгдэл
                     </span>
                     <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-                      HD Video
+                      HD видео
                     </span>
                   </div>
 
@@ -921,7 +920,7 @@ export default function Home() {
                       }}
                       className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                     >
-                      Contact Sales
+                      Борлуулалттай холбогдох
                     </button>
                   </div>
                 </div>
@@ -965,7 +964,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div className="absolute top-4 left-4 bg-gradient-to-r from-violet-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Thermal
+                     Дулааны
                   </div>
                 </div>
                 <div className="p-6">
@@ -973,18 +972,18 @@ export default function Home() {
                     Thermal Security Camera
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Advanced thermal imaging for complete darkness detection
+                    Харанхуй орчинд ч дулааны дүрслэлээр илрүүлэх дэвшилтэт технологи
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="bg-violet-100 text-violet-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Thermal Imaging
+                      Дулааны дүрслэл
                     </span>
                     <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Night Detection
+                      Шөнийн илрүүлэлт
                     </span>
                     <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Heat Sensing
+                      Дулаан мэдрэх
                     </span>
                   </div>
 
@@ -1009,7 +1008,7 @@ export default function Home() {
                       }}
                       className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                     >
-                      Contact Sales
+                      Борлуулалттай холбогдох
                     </button>
                   </div>
                 </div>
@@ -1019,7 +1018,7 @@ export default function Home() {
             {/* View All Button */}
             <div className="text-center mt-12">
               <button className="bg-gradient-to-r from-gray-900 to-gray-700 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                View All Cameras
+                 Бүх камерыг харах
               </button>
             </div>
           </div>
@@ -1034,7 +1033,7 @@ export default function Home() {
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-3xl font-bold text-gray-900">
-                  Product Details
+                  Бүтээгдэхүүний дэлгэрэнгүй
                 </h2>
                 <button
                   onClick={() => setIsProductModalOpen(false)}
@@ -1110,7 +1109,7 @@ export default function Home() {
                   {/* Features */}
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      Key Features
+                      Гол боломжууд
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedProduct.features.map((feature, index) => (
@@ -1127,31 +1126,31 @@ export default function Home() {
                   {/* Technical Specifications */}
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      Technical Specifications
+                      Техникийн үзүүлэлт
                     </h4>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Resolution:</span>
+                        <span className="text-gray-600">Нягтаршил:</span>
                         <span className="font-medium">4K Ultra HD</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Night Vision:</span>
+                        <span className="text-gray-600">Шөнийн хараа:</span>
                         <span className="font-medium">Up to 100m</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Weatherproof:</span>
+                        <span className="text-gray-600">Цаг агаарын хамгаалалт:</span>
                         <span className="font-medium">IP67 Rated</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Storage:</span>
+                        <span className="text-gray-600">Санах ой:</span>
                         <span className="font-medium">Up to 128GB</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Power:</span>
+                        <span className="text-gray-600">Тэжээл:</span>
                         <span className="font-medium">12V DC / PoE</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Warranty:</span>
+                        <span className="text-gray-600">Баталгаа:</span>
                         <span className="font-medium">2 Years</span>
                       </div>
                     </div>
@@ -1176,10 +1175,10 @@ export default function Home() {
                               selectedProduct.originalPrice) *
                               100
                           )}
-                          % OFF
+                          % ХЯМДРАЛ
                         </div>
                         <div className="text-sm text-gray-600">
-                          Limited Time
+                          Хугацаатай
                         </div>
                       </div>
                     </div>
@@ -1195,10 +1194,10 @@ export default function Home() {
                         }}
                         className="flex-1 bg-gradient-to-r from-teal-500 to-blue-600 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                       >
-                        Contact Sales
+                        Борлуулалттай холбогдох
                       </button>
                       <button className="px-6 py-4 border-2 border-teal-500 text-teal-600 rounded-xl font-semibold hover:bg-teal-50 transition-all duration-300">
-                        Contact Sales
+                        Борлуулалттай холбогдох
                       </button>
                     </div>
                   </div>
@@ -1266,7 +1265,7 @@ export default function Home() {
               {/* Quick Links */}
               <div>
                 <h3 className="text-lg font-semibold mb-6 text-teal-400">
-                  Quick Links
+                  Түргэн холбоос
                 </h3>
                 <ul className="space-y-3">
                   <li>
@@ -1274,7 +1273,7 @@ export default function Home() {
                       href="#"
                       className="text-gray-300 hover:text-teal-400 transition-colors duration-300"
                     >
-                      Home
+                      Нүүр
                     </a>
                   </li>
                   <li>
@@ -1282,7 +1281,7 @@ export default function Home() {
                       href="#"
                       className="text-gray-300 hover:text-teal-400 transition-colors duration-300"
                     >
-                      About Us
+                      Бидний тухай
                     </a>
                   </li>
                   <li>
@@ -1290,7 +1289,7 @@ export default function Home() {
                       href="#"
                       className="text-gray-300 hover:text-teal-400 transition-colors duration-300"
                     >
-                      Products
+                      Бүтээгдэхүүн
                     </a>
                   </li>
                   <li>
@@ -1298,7 +1297,7 @@ export default function Home() {
                       href="#"
                       className="text-gray-300 hover:text-teal-400 transition-colors duration-300"
                     >
-                      Services
+                      Үйлчилгээ
                     </a>
                   </li>
                   <li>
@@ -1306,7 +1305,7 @@ export default function Home() {
                       href="#"
                       className="text-gray-300 hover:text-teal-400 transition-colors duration-300"
                     >
-                      Support
+                      Дэмжлэг
                     </a>
                   </li>
                 </ul>
@@ -1315,7 +1314,7 @@ export default function Home() {
               {/* Contact Info */}
               <div>
                 <h3 className="text-lg font-semibold mb-6 text-teal-400">
-                  Contact Info
+                  Холбоо барих
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
@@ -1335,7 +1334,7 @@ export default function Home() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-gray-300 text-sm">Phone</p>
+                      <p className="text-gray-300 text-sm">Утас</p>
                       <p className="text-white font-medium">+976 9900-1234</p>
                     </div>
                   </div>
@@ -1357,15 +1356,15 @@ export default function Home() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-gray-300 text-sm">Email</p>
+                      <p className="text-gray-300 text-sm">И-мэйл</p>
                       <p className="text-white font-medium">info@securox.mn</p>
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-teal-500/20 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-teал-500/20 rounded-full flex items-center justify-center">
                       <svg
-                        className="w-4 h-4 text-teal-400"
+                        className="w-4 h-4 text-teал-400"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -1385,9 +1384,9 @@ export default function Home() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-gray-300 text-sm">Address</p>
+                      <p className="text-gray-300 text-sm">Хаяг</p>
                       <p className="text-white font-medium">
-                        Sukhbaatar District, Ulaanbaatar
+                        Сүхбаатар дүүрэг, Улаанбаатар
                       </p>
                     </div>
                   </div>
@@ -1402,9 +1401,9 @@ export default function Home() {
                           "Таны хүсэлтийг хүлээн авлаа. Бид танд удахгүй холбогдох болно!"
                         );
                       }}
-                      className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                      className="w-full bg-gradient-to-r from-teал-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                     >
-                      Contact Sales
+                      Борлуулалттай холбогдох
                     </button>
                   </div>
                 </div>
@@ -1415,26 +1414,26 @@ export default function Home() {
             <div className="border-t border-gray-800 mt-12 pt-8">
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <p className="text-gray-400 text-sm">
-                  © 2024 Securox. All rights reserved.
+                  © 2024 Securox. Бүх эрх хуулиар хамгаалагдсан.
                 </p>
                 <div className="flex space-x-6 mt-4 md:mt-0">
                   <a
                     href="#"
-                    className="text-gray-400 hover:text-teal-400 text-sm transition-colors duration-300"
+                    className="text-gray-400 hover:text-teал-400 text-sm transition-colors duration-300"
                   >
-                    Privacy Policy
+                    Нууцлалын бодлого
                   </a>
                   <a
                     href="#"
-                    className="text-gray-400 hover:text-teal-400 text-sm transition-colors duration-300"
+                    className="text-gray-400 hover:text-teал-400 text-sm transition-colors duration-300"
                   >
-                    Terms of Service
+                    Үйлчилгээний нөхцөл
                   </a>
                   <a
                     href="#"
-                    className="text-gray-400 hover:text-teal-400 text-sm transition-colors duration-300"
+                    className="text-gray-400 hover:text-teал-400 text-sm transition-colors duration-300"
                   >
-                    Cookie Policy
+                    Күүкийн бодлого
                   </a>
                 </div>
               </div>

@@ -21,9 +21,7 @@ export default function ProductModal({
         {/* Modal Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Product Details
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-900">Бүтээгдэхүүний дэлгэрэнгүй</h2>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -97,9 +95,7 @@ export default function ProductModal({
 
               {/* Features */}
               <div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                  Key Features
-                </h4>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">Гол боломжууд</h4>
                 <div className="flex flex-wrap gap-2">
                   {product.features.map((feature, index) => (
                     <span
@@ -114,32 +110,30 @@ export default function ProductModal({
 
               {/* Technical Specifications */}
               <div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                  Technical Specifications
-                </h4>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">Техникийн үзүүлэлт</h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Resolution:</span>
+                    <span className="text-gray-600">Нягтаршил:</span>
                     <span className="font-medium">4K Ultra HD</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Night Vision:</span>
+                    <span className="text-gray-600">Шөнийн хараа:</span>
                     <span className="font-medium">Up to 100m</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Weatherproof:</span>
+                    <span className="text-gray-600">Цаг агаарын хамгаалалт:</span>
                     <span className="font-medium">IP67 Rated</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Storage:</span>
+                    <span className="text-gray-600">Санах ой:</span>
                     <span className="font-medium">Up to 128GB</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Power:</span>
+                    <span className="text-gray-600">Тэжээл:</span>
                     <span className="font-medium">12V DC / PoE</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Warranty:</span>
+                    <span className="text-gray-600">Баталгаа:</span>
                     <span className="font-medium">2 Years</span>
                   </div>
                 </div>
@@ -163,9 +157,9 @@ export default function ProductModal({
                           product.originalPrice) *
                           100
                       )}
-                      % OFF
+                      % ХЯМДРАЛ
                     </div>
-                    <div className="text-sm text-gray-600">Limited Time</div>
+                    <div className="text-sm text-gray-600">Хугацаатай</div>
                   </div>
                 </div>
 
@@ -180,10 +174,10 @@ export default function ProductModal({
                     }}
                     className="flex-1 bg-gradient-to-r from-teal-500 to-blue-600 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                   >
-                    Contact Sales
+                    Борлуулалттай холбогдох
                   </button>
                   <button className="px-6 py-4 border-2 border-teal-500 text-teal-600 rounded-xl font-semibold hover:bg-teal-50 transition-all duration-300">
-                    Contact Sales
+                    Борлуулалттай холбогдох
                   </button>
                 </div>
               </div>
