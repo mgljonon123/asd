@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Securox - Орчноо дээдээс доош хүртэл хамгаал",
-  description: "Эрсдэлийг бууруулж, бүтээгдэхүүнээ хурдан хүргэж, асуудлыг урьдчилан шийдэхийн тулд securex-ээр дэд бүтцээ сайжруулаарай.",
+  title: "SpecialForceLLC - Орчноо дээдээс доош хүртэл хамгаал",
+  description: "SpecialForceLLC–ийн шийдлээр орчноо хамгаалж, эрсдэлийг бууруулж, гэмт хэргээс урьдчилан сэргийлээрэй.",
 };
 
 export default function RootLayout({

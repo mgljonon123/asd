@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Product {
   id: number;
@@ -11,12 +11,16 @@ interface Product {
   features: string[];
   badge: string;
   badgeColor: string;
+  images?: string[];
 }
 
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [showShopView, setShowShopView] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const openProductModal = (product: Product) => {
     setSelectedProduct(product);
@@ -30,6 +34,71 @@ export default function Home() {
   const handleBackToHome = () => {
     setShowShopView(false);
   };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setIsLoadingProducts(true);
+        setLoadError(null);
+        const res = await fetch("/api/products", { cache: "no-store" });
+        if (!res.ok) throw new Error("Алдаа гарлаа");
+        const data = await res.json();
+        const transformed: Product[] = (Array.isArray(data) ? data : []).map(
+          (p: any): Product => {
+            const price = Number(p.price) || 0;
+            const originalPrice = price > 0 ? Math.round(price * 1.15) : price;
+            const tags: string[] = Array.isArray(p.tags) ? p.tags : [];
+            const features = tags.length
+              ? tags
+              : [
+                  p.category?.name || "Бүлэг",
+                  p.company?.name || "Компани",
+                ];
+            const createdAt = p.createdAt ? new Date(p.createdAt) : null;
+            const isNew = createdAt
+              ? Date.now() - createdAt.getTime() < 14 * 24 * 60 * 60 * 1000
+              : false;
+            const outOfStock = p.stockStatus === "OUT_OF_STOCK";
+            const badge = outOfStock
+              ? "Дууссан"
+              : isNew
+              ? "Шинэ"
+              : "Онцлох";
+            const badgeColor = outOfStock
+              ? "red"
+              : isNew
+              ? "red"
+              : p.category?.type === "ALARM"
+              ? "purple"
+              : "teal";
+            return {
+              id: p.id || 0,
+              name: p.name,
+              price,
+              originalPrice,
+              description: p.description || "",
+              features,
+              badge,
+              badgeColor,
+              images: Array.isArray(p.images)
+                ? p.images
+                : typeof p.images === "string" && p.images
+                ? [p.images]
+                : [],
+            } as Product;
+          }
+        );
+        setProducts(transformed);
+      } catch (e: any) {
+        setLoadError(e?.message || "Ачааллахад алдаа гарлаа");
+      } finally {
+        setIsLoadingProducts(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
       {/* Animated Background Elements */}
@@ -314,24 +383,24 @@ export default function Home() {
               <div className="mb-8">
                 <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
                   <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-                    ОРЧНОО
+                    Бүх түвшний
                   </span>
                   <br />
                   <span className="bg-gradient-to-r from-teal-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    ДЭЭДСЭЭС
+                    хамгаалалт,
                   </span>
                   <br />
                   <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-                     ДООШ ХҮРТЭЛ ХАМГААЛ
+                    бүрэн итгэл.
                   </span>
                 </h1>
               </div>
 
               {/* Enhanced Subtext */}
               <p className="text-gray-600 text-xl mb-10 leading-relaxed max-w-lg">
-                Эрсдэлийг бууруулж, бүтээгдэхүүнээ хурдан хүргэж, асуудлыг
-                урьдчилан шийдэхийн тулд дэд бүтцээ
-                <span className="font-semibold text-teal-600"> securex</span>-ээр сайжруулаарай.
+                <span className="font-semibold text-teal-600"> "SpecialForceLLC</span>
+-ийн шийдлээр орчноо хамгаалж, эрсдэлийг бууруулж, гэмт хэргээс урьдчилан сэргийлээрэй.”
+                -ээр сайжруулаарай.
               </p>
 
               {/* Enhanced CTA Button */}
@@ -516,26 +585,45 @@ export default function Home() {
 
             {/* Camera Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Camera Card 1 - Dome Camera */}
-              <div
-                className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover-lift overflow-hidden cursor-pointer"
-                onClick={() =>
-                  openProductModal({
-                    id: 1,
-                    name: "HD Dome Camera Pro",
-                    price: 450000,
-                    originalPrice: 550000,
-                    description:
-                      "1080p HD resolution with night vision and motion detection",
-                    features: ["1080p HD", "Night Vision", "Motion Detection"],
-                    badge: "Best Seller",
-                    badgeColor: "teal",
-                  })
-                }
+              {isLoadingProducts && (
+                <div className="col-span-full text-center text-gray-500">
+                  Ачаалж байна...
+                  </div>
+              )}
+              {loadError && !isLoadingProducts && (
+                <div className="col-span-full text-center text-red-600">
+                  {loadError}
+                  </div>
+              )}
+              {!isLoadingProducts && !loadError && products.length === 0 && (
+                <div className="col-span-full text-center text-gray-600">
+                  Бүтээгдэхүүн байхгүй байна.
+                </div>
+              )}
+
+              {products.map((p, idx) => (
+                <div
+                  key={p.id ?? idx}
+                  className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover-lift overflow-hidden cursor-pointer border border-black hover:border-black hover:ring-2 hover:ring-black/20"
+                  onClick={() => openProductModal(p)}
               >
                 <div className="relative h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  {/* Camera Image Placeholder */}
-                  <div className="w-32 h-32 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-lg">
+                    <div className="relative w-full mx-6 aspect-[16/9] rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-gray-300 to-gray-400">
+                      {Array.isArray(p.images) && p.images.length > 0 ? (
+                        <Image
+                          src={
+                            p.images[0].startsWith("http") ||
+                            p.images[0].startsWith("/") ||
+                            p.images[0].startsWith("data:")
+                              ? p.images[0]
+                              : `/${p.images[0].replace(/^\/+/i, "")}`
+                          }
+                          alt={p.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
                     <svg
                       className="w-16 h-16 text-gray-600"
                       fill="none"
@@ -550,469 +638,54 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  {/* Badge */}
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-teal-500 to-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                     Хамгийн их борлуулалттай
+                      )}
                   </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    HD Dome Camera Pro
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    1080p HD нягтаршил, шөнийн хараа, хөдөлгөөн илрүүлэлттэй
-                  </p>
-
-                  {/* Features */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-teal-100 text-teal-800 px-2 py-1 rounded-full text-xs font-medium">
-                      1080p HD
-                    </span>
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Night Vision
-                    </span>
-                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Motion Detection
-                    </span>
-                  </div>
-
-                  {/* Price */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="text-2xl font-bold text-gray-900">
-                      ₮450,000
-                    </div>
-                    <div className="text-sm text-gray-500 line-through">
-                      ₮550,000
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                </div>
-              </div>
-
-              {/* Camera Card 2 - Bullet Camera */}
-              <div
-                className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover-lift overflow-hidden cursor-pointer"
-                onClick={() =>
-                  openProductModal({
-                    id: 2,
-                    name: "4K Bullet Camera Ultra",
-                    price: 850000,
-                    originalPrice: 950000,
-                    description:
-                      "4K ultra HD with 360° pan and tilt capabilities",
-                    features: ["4K Ultra HD", "360° View", "Weatherproof"],
-                    badge: "New",
-                    badgeColor: "red",
-                  })
-                }
-              >
-                <div className="relative h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <div className="w-32 h-32 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-16 h-16 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                    <div
+                      className={`absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-semibold text-white bg-gradient-to-r ${
+                        p.badgeColor === "teal"
+                          ? "from-teal-500 to-blue-600"
+                          : p.badgeColor === "red"
+                          ? "from-red-500 to-pink-600"
+                          : p.badgeColor === "purple"
+                          ? "from-purple-500 to-indigo-600"
+                          : p.badgeColor === "green"
+                          ? "from-green-500 to-emerald-600"
+                          : p.badgeColor === "orange"
+                          ? "from-orange-500 to-red-600"
+                          : "from-violet-500 to-purple-600"
+                      }`}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1}
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-pink-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Шинэ
+                      {p.badge}
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    4K Bullet Camera Ultra
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    4K Ultra HD, 360° эргэлт, налалтын боломжтой
-                  </p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{p.name}</h3>
+                    <p className="text-gray-600 mb-4">{p.description}</p>
 
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
-                      4K Ultra HD
+                      {p.features.slice(0, 3).map((f, i) => (
+                        <span
+                          key={i}
+                          className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium"
+                        >
+                          {f}
                     </span>
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                      360° харах өнцөг
-                    </span>
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Цаг агаарын хамгаалалт
-                    </span>
+                      ))}
                   </div>
 
                   <div className="flex items-center justify-between mb-4">
                     <div className="text-2xl font-bold text-gray-900">
-                      ₮850,000
+                        ₮{p.price.toLocaleString()}
                     </div>
+                      {p.originalPrice > p.price && (
                     <div className="text-sm text-gray-500 line-through">
-                      ₮950,000
+                          ₮{p.originalPrice.toLocaleString()}
                     </div>
+                      )}
                   </div>
-
-                  {/* Action Button */}
-                  <div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Contact sales functionality
-                        alert(
-                          "Таны хүсэлтийг хүлээн авлаа. Бид танд удахгүй холбогдох болно!"
-                        );
-                      }}
-                      className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    >
-                      Борлуулалттай холбогдох
-                    </button>
                   </div>
                 </div>
-              </div>
-
-              {/* Camera Card 3 - PTZ Camera */}
-              <div
-                className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover-lift overflow-hidden cursor-pointer"
-                onClick={() =>
-                  openProductModal({
-                    id: 3,
-                    name: "PTZ Security Camera",
-                    price: 1250000,
-                    originalPrice: 1450000,
-                    description:
-                      "Professional PTZ with AI-powered tracking and analytics",
-                    features: ["AI Tracking", "PTZ Control", "Analytics"],
-                    badge: "Premium",
-                    badgeColor: "purple",
-                  })
-                }
-              >
-                <div className="relative h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <div className="w-32 h-32 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-16 h-16 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1}
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Дээд зэрэглэл
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    PTZ Security Camera
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    AI-тэй мөрдөх ба аналитиктой мэргэжлийн PTZ камер
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
-                      AI мөрдөх
-                    </span>
-                    <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-xs font-medium">
-                      PTZ удирдлага
-                    </span>
-                    <span className="bg-pink-100 text-pink-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Аналитик
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="text-2xl font-bold text-gray-900">
-                      ₮1,250,000
-                    </div>
-                    <div className="text-sm text-gray-500 line-through">
-                      ₮1,450,000
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Contact sales functionality
-                        alert(
-                          "Таны хүсэлтийг хүлээн авлаа. Бид танд удахгүй холбогдох болно!"
-                        );
-                      }}
-                      className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    >
-                      Борлуулалттай холбогдох
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Camera Card 4 - Wireless Camera */}
-              <div
-                className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover-lift overflow-hidden cursor-pointer"
-                onClick={() =>
-                  openProductModal({
-                    id: 4,
-                    name: "WiFi Security Camera",
-                    price: 320000,
-                    originalPrice: 380000,
-                    description:
-                      "Wireless HD camera with mobile app control and cloud storage",
-                    features: ["WiFi", "Mobile App", "Cloud Storage"],
-                    badge: "Wireless",
-                    badgeColor: "green",
-                  })
-                }
-              >
-                <div className="relative h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <div className="w-32 h-32 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-16 h-16 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1}
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Утасгүй
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    WiFi Security Camera
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Утасгүй HD камер: гар утасны апп удирдлага, үүлэн сан
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                      WiFi
-                    </span>
-                    <span className="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Гар утасны апп
-                    </span>
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Үүлэн сан
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="text-2xl font-bold text-gray-900">
-                      ₮320,000
-                    </div>
-                    <div className="text-sm text-gray-500 line-through">
-                      ₮380,000
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Contact sales functionality
-                        alert(
-                          "Таны хүсэлтийг хүлээн авлаа. Бид танд удахгүй холбогдох болно!"
-                        );
-                      }}
-                      className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    >
-                      Борлуулалттай холбогдох
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Camera Card 5 - Doorbell Camera */}
-              <div
-                className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover-lift overflow-hidden cursor-pointer"
-                onClick={() =>
-                  openProductModal({
-                    id: 5,
-                    name: "Smart Doorbell Camera",
-                    price: 280000,
-                    originalPrice: 350000,
-                    description:
-                      "Video doorbell with two-way audio and motion alerts",
-                    features: ["Two-way Audio", "Motion Alerts", "HD Video"],
-                    badge: "Smart",
-                    badgeColor: "orange",
-                  })
-                }
-              >
-                <div className="relative h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <div className="w-32 h-32 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-16 h-16 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1}
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Ухаалаг
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Smart Doorbell Camera
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Хоёр талын дуу, хөдөлгөөний мэдэгдэлтэй видео хонх
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Хоёр талын дуу
-                    </span>
-                    <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Хөдөлгөөний мэдэгдэл
-                    </span>
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-                      HD видео
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="text-2xl font-bold text-gray-900">
-                      ₮280,000
-                    </div>
-                    <div className="text-sm text-gray-500 line-through">
-                      ₮350,000
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Contact sales functionality
-                        alert(
-                          "Таны хүсэлтийг хүлээн авлаа. Бид танд удахгүй холбогдох болно!"
-                        );
-                      }}
-                      className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    >
-                      Борлуулалттай холбогдох
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Camera Card 6 - Thermal Camera */}
-              <div
-                className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover-lift overflow-hidden cursor-pointer"
-                onClick={() =>
-                  openProductModal({
-                    id: 6,
-                    name: "Thermal Security Camera",
-                    price: 1800000,
-                    originalPrice: 2100000,
-                    description:
-                      "Advanced thermal imaging for complete darkness detection",
-                    features: [
-                      "Thermal Imaging",
-                      "Night Detection",
-                      "Heat Sensing",
-                    ],
-                    badge: "Thermal",
-                    badgeColor: "violet",
-                  })
-                }
-              >
-                <div className="relative h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <div className="w-32 h-32 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-16 h-16 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1}
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-violet-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                     Дулааны
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Thermal Security Camera
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Харанхуй орчинд ч дулааны дүрслэлээр илрүүлэх дэвшилтэт технологи
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-violet-100 text-violet-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Дулааны дүрслэл
-                    </span>
-                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Шөнийн илрүүлэлт
-                    </span>
-                    <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-xs font-medium">
-                      Дулаан мэдрэх
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="text-2xl font-bold text-gray-900">
-                      ₮1,800,000
-                    </div>
-                    <div className="text-sm text-gray-500 line-through">
-                      ₮2,100,000
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Contact sales functionality
-                        alert(
-                          "Таны хүсэлтийг хүлээн авлаа. Бид танд удахгүй холбогдох болно!"
-                        );
-                      }}
-                      className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    >
-                      Борлуулалттай холбогдох
-                    </button>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
 
             {/* View All Button */}
@@ -1061,7 +734,22 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Product Image */}
                 <div className="relative h-80 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center shadow-lg">
-                  <div className="w-48 h-48 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center shadow-xl">
+                  <div className="relative w-full mx-6 aspect-[16/9] rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-gray-300 to-gray-400">
+                    {Array.isArray(selectedProduct.images) && selectedProduct.images.length > 0 ? (
+                      <Image
+                        src={
+                          selectedProduct.images[0].startsWith("http") ||
+                          selectedProduct.images[0].startsWith("/") ||
+                          selectedProduct.images[0].startsWith("data:")
+                            ? selectedProduct.images[0]
+                            : `/${selectedProduct.images[0].replace(/^\/+/i, "")}`
+                        }
+                        alt={selectedProduct.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
                     <svg
                       className="w-24 h-24 text-gray-600"
                       fill="none"
@@ -1075,6 +763,8 @@ export default function Home() {
                         d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
                       />
                     </svg>
+                      </div>
+                    )}
                   </div>
                   <div
                     className={`absolute top-4 left-4 px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-r ${
@@ -1335,7 +1025,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="text-gray-300 text-sm">Утас</p>
-                      <p className="text-white font-medium">+976 9900-1234</p>
+                      <p className="text-white font-medium">+976 72203729 95959876</p>
                     </div>
                   </div>
 
@@ -1357,7 +1047,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="text-gray-300 text-sm">И-мэйл</p>
-                      <p className="text-white font-medium">info@securox.mn</p>
+                      <p className="text-white font-medium">Specialforcellc@gmail.com</p>
                     </div>
                   </div>
 
