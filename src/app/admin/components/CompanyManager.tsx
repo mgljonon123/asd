@@ -191,7 +191,7 @@ export default function CompanyManager() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search companies, phone, location..."
-                className="w-full sm:w-80 rounded-lg border border-gray-300 bg-white px-3 py-2 pl-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full sm:w-80 rounded-lg border border-gray-300 bg-white px-3 py-2 pl-3 text-black placeholder:text-black focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

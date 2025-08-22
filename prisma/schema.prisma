@@ -13,6 +13,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  role      UserRole @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
 model Company {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String   @unique
@@ -72,4 +83,9 @@ enum StockStatus {
 enum CategorySegment {
   RESIDENTIAL
   COMPANY
+}
+
+enum UserRole {
+  ADMIN
+  USER
 }

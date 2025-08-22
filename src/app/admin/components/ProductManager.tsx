@@ -36,6 +36,13 @@ interface Product {
   images: string[];
   inStock: boolean;
   stockStatus: "AVAILABLE" | "OUT_OF_STOCK";
+  // Technical specifications
+  resolution?: string;
+  nightVision?: string;
+  weatherProtection?: string;
+  storage?: string;
+  power?: string;
+  warranty?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -73,6 +80,12 @@ export default function ProductManager() {
     images: "",
     inStock: true,
     stockStatus: "AVAILABLE" as "AVAILABLE" | "OUT_OF_STOCK",
+    resolution: "4K Ultra HD",
+    nightVision: "Up to 100m",
+    weatherProtection: "IP67 Rated",
+    storage: "Up to 128GB",
+    power: "12V DC / PoE",
+    warranty: "2 Years",
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"ALL" | "CAMERA" | "ALARM">(
@@ -235,6 +248,12 @@ export default function ProductManager() {
       images: product.images.join(", "),
       inStock: product.inStock,
       stockStatus: product.stockStatus,
+      resolution: product.resolution ?? "",
+      nightVision: product.nightVision ?? "",
+      weatherProtection: product.weatherProtection ?? "",
+      storage: product.storage ?? "",
+      power: product.power ?? "",
+      warranty: product.warranty ?? "",
     });
     setIsDialogOpen(true);
   };
@@ -263,6 +282,12 @@ export default function ProductManager() {
       images: "",
       inStock: true,
       stockStatus: "AVAILABLE",
+      resolution: "4K Ultra HD",
+      nightVision: "Up to 100m",
+      weatherProtection: "IP67 Rated",
+      storage: "Up to 128GB",
+      power: "12V DC / PoE",
+      warranty: "2 Years",
     });
     setEditingProduct(null);
   };
@@ -356,14 +381,14 @@ export default function ProductManager() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search name, tags or description..."
-              className="w-full sm:w-64 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+              className="w-full sm:w-64 border border-gray-300 rounded-lg px-3 py-2 text-black placeholder:text-black focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
             />
             <select
               value={filterType}
               onChange={(e) =>
                 setFilterType(e.target.value as "ALL" | "CAMERA" | "ALARM")
               }
-              className="border border-gray-300 rounded-lg px-3 py-2"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-black"
             >
               <option value="ALL">All Types</option>
               <option value="CAMERA">Camera</option>
@@ -376,7 +401,7 @@ export default function ProductManager() {
                   e.target.value as "ALL" | "RESIDENTIAL" | "COMPANY"
                 )
               }
-              className="border border-gray-300 rounded-lg px-3 py-2"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-black"
             >
               <option value="ALL">All Segments</option>
               <option value="RESIDENTIAL">Residential</option>
@@ -389,7 +414,7 @@ export default function ProductManager() {
                   e.target.value as "ALL" | "AVAILABLE" | "OUT_OF_STOCK"
                 )
               }
-              className="border border-gray-300 rounded-lg px-3 py-2"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-black"
             >
               <option value="ALL">All Stock</option>
               <option value="AVAILABLE">Available</option>
@@ -410,7 +435,7 @@ export default function ProductManager() {
               </DialogTrigger>
               {isDialogOpen && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                  <DialogContent className="sm:max-w-2xl w-full max-w-2xl bg-white text-gray-900 rounded-xl shadow-xl border border-gray-200 p-6 sm:p-8">
+                  <DialogContent className="sm:max-w-2xl w-full max-w-2xl bg-white text-gray-900 rounded-xl shadow-xl border border-gray-200 p-6 sm:p-8 max-h-[85vh] overflow-y-auto">
                     <div className="mb-4">
                       <DialogTitle>
                         {editingProduct ? "Edit Product" : "Add New Product"}
@@ -685,7 +710,142 @@ export default function ProductManager() {
                         </div>
                       </div>
 
-                      <div className="flex justify-end space-x-3 pt-4">
+                      {/* Technical Specifications */}
+                      <div>
+                        <h4 className="text-md font-semibold text-gray-900 mb-2">
+                          Technical Specs
+                        </h4>
+                        <div className="grid grid-cols-2 gap-5">
+                          <div>
+                            <label
+                              htmlFor="resolution"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Нягтаршил
+                            </label>
+                            <input
+                              type="text"
+                              id="resolution"
+                              value={formData.resolution}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  resolution: e.target.value,
+                                })
+                              }
+                              placeholder="4K Ultra HD"
+                              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="nightVision"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Шөнийн хараа
+                            </label>
+                            <input
+                              type="text"
+                              id="nightVision"
+                              value={formData.nightVision}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  nightVision: e.target.value,
+                                })
+                              }
+                              placeholder="Up to 100m"
+                              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="weatherProtection"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Цаг агаарын хамгаалалт
+                            </label>
+                            <input
+                              type="text"
+                              id="weatherProtection"
+                              value={formData.weatherProtection}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  weatherProtection: e.target.value,
+                                })
+                              }
+                              placeholder="IP67 Rated"
+                              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="storage"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Санах ой
+                            </label>
+                            <input
+                              type="text"
+                              id="storage"
+                              value={formData.storage}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  storage: e.target.value,
+                                })
+                              }
+                              placeholder="Up to 128GB"
+                              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="power"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Тэжээл
+                            </label>
+                            <input
+                              type="text"
+                              id="power"
+                              value={formData.power}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  power: e.target.value,
+                                })
+                              }
+                              placeholder="12V DC / PoE"
+                              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="warranty"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Баталгаа
+                            </label>
+                            <input
+                              type="text"
+                              id="warranty"
+                              value={formData.warranty}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  warranty: e.target.value,
+                                })
+                              }
+                              placeholder="2 Years"
+                              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end space-x-3 pt-4 sticky bottom-0 bg-white border-t border-gray-200 mt-2 py-4">
                         <button
                           type="button"
                           onClick={() => {

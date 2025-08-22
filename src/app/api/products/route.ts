@@ -5,7 +5,9 @@ export async function GET() {
   try {
     const products = await prisma.product.findMany({
       include: {
-        category: { select: { id: true, name: true, type: true } },
+        category: {
+          select: { id: true, name: true, type: true, segment: true },
+        },
         company: { select: { id: true, name: true } },
       },
       orderBy: { createdAt: "desc" },
@@ -35,6 +37,13 @@ export async function POST(request: NextRequest) {
       images,
       inStock,
       stockStatus,
+      // technical specs
+      resolution,
+      nightVision,
+      weatherProtection,
+      storage,
+      power,
+      warranty,
     } = body;
 
     if (!name || !description || !price || !companyId) {
@@ -93,9 +102,17 @@ export async function POST(request: NextRequest) {
           : [],
         inStock: Boolean(inStock),
         stockStatus,
+        resolution,
+        nightVision,
+        weatherProtection,
+        storage,
+        power,
+        warranty,
       },
       include: {
-        category: { select: { id: true, name: true, type: true } },
+        category: {
+          select: { id: true, name: true, type: true, segment: true },
+        },
         company: { select: { id: true, name: true } },
       },
     });

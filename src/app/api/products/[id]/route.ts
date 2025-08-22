@@ -20,6 +20,12 @@ export async function PATCH(
       images,
       inStock,
       stockStatus,
+      resolution,
+      nightVision,
+      weatherProtection,
+      storage,
+      power,
+      warranty,
     } = body;
 
     const updated = await prisma.product.update({
@@ -49,9 +55,17 @@ export async function PATCH(
           : undefined,
         inStock,
         stockStatus,
+        resolution,
+        nightVision,
+        weatherProtection,
+        storage,
+        power,
+        warranty,
       },
       include: {
-        category: { select: { id: true, name: true, type: true } },
+        category: {
+          select: { id: true, name: true, type: true, segment: true },
+        },
         company: { select: { id: true, name: true } },
       },
     });

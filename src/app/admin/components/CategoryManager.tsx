@@ -203,14 +203,14 @@ export default function CategoryManager() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search name or description..."
-            className="w-full sm:w-64 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            className="w-full sm:w-64 border border-gray-300 rounded-lg px-3 py-2 text-black placeholder:text-black focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
           />
           <select
             value={filterType}
             onChange={(e) =>
               setFilterType(e.target.value as "ALL" | "CAMERA" | "ALARM")
             }
-            className="border border-gray-300 rounded-lg px-3 py-2"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-black"
           >
             <option value="ALL">All Types</option>
             <option value="CAMERA">Camera</option>
@@ -223,7 +223,7 @@ export default function CategoryManager() {
                 e.target.value as "ALL" | "RESIDENTIAL" | "COMPANY"
               )
             }
-            className="border border-gray-300 rounded-lg px-3 py-2"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-black"
           >
             <option value="ALL">All Segments</option>
             <option value="RESIDENTIAL">Residential</option>
