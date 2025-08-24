@@ -1,34 +1,36 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 
-export default function AdminLoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function AdminSetupPage() {
+  const [email, setEmail] = useState("Specialforcellc@gmail.com");
+  const [password, setPassword] = useState("dragonX12");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-  const search = useSearchParams();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSetup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setLoading(true);
+    setMessage(null);
+    setError(null);
+    
     try {
-      const res = await fetch("/api/admin/login", {
+      const res = await fetch("/api/admin/setup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+      
+      const data = await res.json();
+      
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data?.message || "Нэвтрэхэд алдаа гарлаа");
+        throw new Error(data?.message || "Тохиргоонд алдаа гарлаа");
       }
-      const to = search.get("from") || "/admin";
-      router.replace(to);
+      
+      setMessage(data.message);
     } catch (e: any) {
-      setError(e?.message || "Нэвтрэхэд алдаа гарлаа");
+      setError(e?.message || "Тохиргоонд алдаа гарлаа");
     } finally {
       setLoading(false);
     }
@@ -37,12 +39,12 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Админ нэвтрэх</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Админ тохиргоо</h1>
         <p className="text-gray-600 mb-6">
-          Админ хуудсанд нэвтрэхийн тулд имэйл болон нууц үгээ оруулна уу.
+          Админ хэрэглэгчийг үүсгэх эсвэл шинэчлэх
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSetup} className="space-y-4">
           <div>
             <label
               htmlFor="email"
@@ -79,26 +81,37 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          {error && <div className="text-red-600 text-sm">{error}</div>}
+          {message && (
+            <div className="text-green-600 text-sm bg-green-50 p-3 rounded-lg">
+              {message}
+            </div>
+          )}
+
+          {error && (
+            <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Нэвтэрч байна..." : "Нэвтрэх"}
+            {loading ? "Тохируулж байна..." : "Админ хэрэглэгч үүсгэх"}
           </button>
-
-          <div className="mt-6 text-center">
-            <a
-              href="/admin/setup"
-              className="text-teal-600 hover:text-teal-700 text-sm font-medium"
-            >
-              Админ тохиргоо
-            </a>
-          </div>
         </form>
+
+        <div className="mt-6 text-center">
+          <a
+            href="/admin/login"
+            className="text-teal-600 hover:text-teal-700 text-sm font-medium"
+          >
+            Нэвтрэх хуудас руу буцах
+          </a>
+        </div>
       </div>
     </div>
   );
 }
+

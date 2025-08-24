@@ -488,7 +488,7 @@ export default function Home() {
           </div>
 
           {/* Right Side - Enhanced Black Background */}
-          <div className="flex-1 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
+          <div className="flex-1 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden border-radius-2xl">
             {/* Enhanced Background Effects */}
             <div className="absolute inset-0">
               <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-teal-500/10 via-transparent to-blue-500/10"></div>

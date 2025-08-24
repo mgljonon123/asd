@@ -37,13 +37,6 @@ export async function POST(request: NextRequest) {
       images,
       inStock,
       stockStatus,
-      // technical specs
-      resolution,
-      nightVision,
-      weatherProtection,
-      storage,
-      power,
-      warranty,
     } = body;
 
     if (!name || !description || !price || !companyId) {
@@ -102,12 +95,6 @@ export async function POST(request: NextRequest) {
           : [],
         inStock: Boolean(inStock),
         stockStatus,
-        resolution,
-        nightVision,
-        weatherProtection,
-        storage,
-        power,
-        warranty,
       },
       include: {
         category: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   Plus,
   Edit,
@@ -18,6 +18,7 @@ import {
 } from "@radix-ui/react-dialog";
 import ProductModal from "../../components/ProductModal";
 import { Product } from "../../types/product";
+import { useAdminData } from "../context/AdminDataContext";
 
 interface Company {
   id: string;
@@ -30,8 +31,14 @@ interface Company {
 }
 
 export default function CompanyManager() {
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    companies,
+    isLoading,
+    addCompany,
+    updateCompany,
+    deleteCompany
+  } = useAdminData();
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -44,68 +51,53 @@ export default function CompanyManager() {
     location: "",
   });
 
-  // Debug form data changes
-  useEffect(() => {
-    console.log("Company form data changed:", formData);
-  }, [formData]);
+  // Memoized filtered companies
+  const filteredCompanies = useMemo(() => {
+    return companies.filter((company) => {
+      const matchesSearch = company.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           company.contactInfo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           company.phoneNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           company.location.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      return matchesSearch;
+    });
+  }, [companies, searchQuery]);
 
-  useEffect(() => {
-    fetchCompanies();
+  // Memoized form handlers
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   }, []);
 
-  const fetchCompanies = async () => {
-    try {
-      setIsLoading(true);
-      const res = await fetch("/api/companies", { cache: "no-store" });
-      if (!res.ok) throw new Error("Failed to fetch companies");
-      const data: Company[] = await res.json();
-      setCompanies(data);
-    } catch (error) {
-      console.error("Error fetching companies:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log("Company form submitted with data:", formData);
-    console.log("Current companies:", companies);
 
     try {
       if (editingCompany) {
-        const res = await fetch(`/api/companies/${editingCompany.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-        if (!res.ok) throw new Error("Failed to update company");
-        const updated: Company = await res.json();
-        setCompanies((prev) =>
-          prev.map((c) => (c.id === updated.id ? updated : c))
-        );
+        await updateCompany(editingCompany.id, formData);
       } else {
-        const res = await fetch("/api/companies", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-        if (!res.ok) throw new Error("Failed to create company");
-        const created: Company = await res.json();
-        setCompanies((prev) => [created, ...prev]);
+        await addCompany(formData);
       }
+
+      // Reset form and close dialog
+      setFormData({
+        name: "",
+        contactInfo: "",
+        phoneNumber: "",
+        location: "",
+      });
+      setEditingCompany(null);
+      setIsDialogOpen(false);
     } catch (error) {
-      console.error(error);
-      alert("Operation failed. See console for details.");
-      return;
+      console.error("Error saving company:", error);
+      alert("Failed to save company");
     }
+  }, [formData, editingCompany, addCompany, updateCompany]);
 
-    resetForm();
-    setIsDialogOpen(false);
-  };
-
-  const handleEdit = (company: Company) => {
+  const handleEdit = useCallback((company: Company) => {
     setEditingCompany(company);
     setFormData({
       name: company.name,
@@ -114,280 +106,223 @@ export default function CompanyManager() {
       location: company.location,
     });
     setIsDialogOpen(true);
-  };
+  }, []);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this company?")) return;
-    try {
-      const res = await fetch(`/api/companies/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete company");
-      setCompanies((prev) => prev.filter((c) => c.id !== id));
-    } catch (error) {
-      console.error(error);
-      alert("Delete failed. See console for details.");
+  const handleDelete = useCallback(async (companyId: string) => {
+    if (confirm("Are you sure you want to delete this company? This will also delete all products from this company.")) {
+      try {
+        await deleteCompany(companyId);
+      } catch (error) {
+        console.error("Error deleting company:", error);
+        alert("Failed to delete company");
+      }
     }
-  };
-
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      contactInfo: "",
-      phoneNumber: "",
-      location: "",
-    });
-    setEditingCompany(null);
-  };
-
-  const showSampleProduct = () => {
-    const sampleProduct: Product = {
-      id: 1,
-      name: "HD Dome Camera Pro",
-      price: 450000,
-      originalPrice: 550000,
-      description: "1080p HD resolution with night vision and motion detection",
-      features: ["1080p HD", "Night Vision", "Motion Detection"],
-      badge: "Best Seller",
-      badgeColor: "teal",
-    };
-
-    setSelectedProduct(sampleProduct);
-    setIsProductModalOpen(true);
-  };
+  }, [deleteCompany]);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">Loading companies...</div>
+        <div className="text-lg text-gray-600">Loading companies...</div>
       </div>
     );
   }
 
-  const filteredCompanies = companies.filter((company) => {
-    const q = searchQuery.toLowerCase();
-    return (
-      company.name.toLowerCase().includes(q) ||
-      company.contactInfo.toLowerCase().includes(q) ||
-      company.phoneNumber.toLowerCase().includes(q) ||
-      company.location.toLowerCase().includes(q)
-    );
-  });
-
   return (
-    <div>
-      <div className="space-y-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-1">
-              Manage Companies
-            </h2>
-            <p className="text-gray-600">
-              Partners, distributors and suppliers
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search companies, phone, location..."
-                className="w-full sm:w-80 rounded-lg border border-gray-300 bg-white px-3 py-2 pl-3 text-black placeholder:text-black focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              />
-            </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <button
-                  onClick={() => setIsDialogOpen(true)}
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Company
-                </button>
-              </DialogTrigger>
-              {isDialogOpen && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                  <DialogContent className="sm:max-w-md w-full max-w-md bg-white text-gray-900 rounded-xl shadow-xl border border-gray-200 p-6 sm:p-8">
-                    <div className="mb-4">
-                      <DialogTitle>
-                        {editingCompany ? "Edit Company" : "Add New Company"}
-                      </DialogTitle>
-                    </div>
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                      <div>
-                        <label
-                          htmlFor="name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Company Name
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="contactInfo"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Contact Info
-                        </label>
-                        <input
-                          type="email"
-                          id="contactInfo"
-                          value={formData.contactInfo}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              contactInfo: e.target.value,
-                            })
-                          }
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="phoneNumber"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Phone Number
-                        </label>
-                        <input
-                          type="tel"
-                          id="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              phoneNumber: e.target.value,
-                            })
-                          }
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="location"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Location
-                        </label>
-                        <input
-                          type="text"
-                          id="location"
-                          value={formData.location}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              location: e.target.value,
-                            })
-                          }
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                          required
-                        />
-                      </div>
-                      <div className="flex justify-end space-x-3 pt-4">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsDialogOpen(false);
-                            resetForm();
-                          }}
-                          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="submit"
-                          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        >
-                          {editingCompany ? "Update" : "Create"}
-                        </button>
-                      </div>
-                    </form>
-                  </DialogContent>
-                </div>
-              )}
-            </Dialog>
-          </div>
-        </div>
-
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredCompanies.map((company) => (
-              <div
-                key={company.id}
-                className="group relative rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="absolute right-3 top-3 z-10 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={() => handleEdit(company)}
-                    className="p-2 rounded-md bg-white/90 border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-300"
-                    title="Edit"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(company.id)}
-                    className="p-2 rounded-md bg-white/90 border border-gray-200 text-gray-600 hover:text-red-600 hover:border-red-300"
-                    title="Delete"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-                <div className="p-5">
-                  <div className="flex items-start gap-4">
-                    <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-700 flex items-center justify-center">
-                      <Building2 className="h-6 w-6" />
-                    </div>
-                    <div className="min-w-0 w-full">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                        {company.name}
-                      </h3>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-600">
-                        <span className="inline-flex items-center">
-                          <Mail className="h-4 w-4 mr-1" />
-                          {company.contactInfo}
-                        </span>
-                        <span className="inline-flex items-center">
-                          <Phone className="h-4 w-4 mr-1" />
-                          {company.phoneNumber}
-                        </span>
-                        <span className="inline-flex items-center">
-                          <MapPin className="h-4 w-4 mr-1" />
-                          {company.location}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          {filteredCompanies.length === 0 && (
-            <div className="mt-8 rounded-xl border border-dashed border-gray-300 p-10 text-center">
-              <p className="text-gray-600">
-                No companies match “{searchQuery}”.
-              </p>
-            </div>
-          )}
+          <h2 className="text-2xl font-bold text-gray-900">Company Management</h2>
+          <p className="text-gray-600">Manage your partner companies and suppliers</p>
         </div>
+        <button
+          onClick={() => setIsDialogOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-blue-600 text-white rounded-lg hover:from-teal-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+        >
+          <Plus className="w-4 h-4" />
+          Add Company
+        </button>
       </div>
 
-      {/* Product Modal */}
-      <ProductModal
-        isOpen={isProductModalOpen}
-        onClose={() => setIsProductModalOpen(false)}
-        product={selectedProduct}
-      />
+      {/* Search */}
+      <div>
+        <input
+          type="text"
+          placeholder="Search companies..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+        />
+      </div>
+
+      {/* Companies Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredCompanies.map((company) => (
+          <div
+            key={company.id}
+            className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300"
+          >
+            {/* Company Icon */}
+            <div className="bg-gradient-to-r from-teal-500 to-blue-600 p-6 flex items-center justify-center">
+              <Building2 className="w-16 h-16 text-white" />
+            </div>
+
+            {/* Company Info */}
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                {company.name}
+              </h3>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Mail className="w-4 h-4 text-gray-400" />
+                  <span>{company.contactInfo}</span>
+                </div>
+                
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Phone className="w-4 h-4 text-gray-400" />
+                  <span>{company.phoneNumber}</span>
+                </div>
+                
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <MapPin className="w-4 h-4 text-gray-400" />
+                  <span>{company.location}</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleEdit(company)}
+                  className="flex-1 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors"
+                >
+                  <Edit className="w-4 h-4 inline mr-1" />
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(company.id)}
+                  className="px-3 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Empty State */}
+      {filteredCompanies.length === 0 && !isLoading && (
+        <div className="text-center py-12">
+          <Building2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No companies found</h3>
+          <p className="text-gray-600 mb-4">
+            {searchQuery
+              ? "Try adjusting your search terms"
+              : "Get started by adding your first company"}
+          </p>
+          {!searchQuery && (
+            <button
+              onClick={() => setIsDialogOpen(true)}
+              className="px-4 py-2 bg-gradient-to-r from-teal-500 to-blue-600 text-white rounded-lg hover:from-teal-600 hover:to-blue-700 transition-all duration-200"
+            >
+              Add Company
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Add/Edit Company Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md">
+          <DialogTitle className="text-2xl font-bold text-gray-900 mb-6">
+            {editingCompany ? "Edit Company" : "Add New Company"}
+          </DialogTitle>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Company Name *
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Contact Info (Email) *
+              </label>
+              <input
+                type="email"
+                name="contactInfo"
+                value={formData.contactInfo}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number *
+              </label>
+              <input
+                type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Location *
+              </label>
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <button
+                type="submit"
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-teal-500 to-blue-600 text-white rounded-lg hover:from-teal-600 hover:to-blue-700 transition-all duration-200 font-medium"
+              >
+                {editingCompany ? "Update Company" : "Create Company"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsDialogOpen(false);
+                  setEditingCompany(null);
+                  setFormData({
+                    name: "",
+                    contactInfo: "",
+                    phoneNumber: "",
+                    location: "",
+                  });
+                }}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
